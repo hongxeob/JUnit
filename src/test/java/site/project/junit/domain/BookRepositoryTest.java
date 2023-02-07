@@ -67,7 +67,7 @@ public class BookRepositoryTest {
         assertEquals(author, findBook.getAuthor());
     }
 
-    // 4. updateBook
+    // 5. deleteBook
     @Sql("classpath:db/tableInit.sql")
     @Test
     void 삭제() throws Exception {
@@ -80,6 +80,23 @@ public class BookRepositoryTest {
 
     }
 
-// 5. deleteBook
+
+    // 4. updateBook
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    void 수정() throws Exception {
+        //given
+        Long id = 1L;
+        String title = "책제목2";
+        String author = "작가2";
+        Book book = new Book(id, title, author);
+        //when
+        Book savedBook = bookRepository.save(book);
+        //then
+        assertEquals(id, savedBook.getId());
+        assertEquals(title, savedBook.getTitle());
+        assertEquals(author, savedBook.getAuthor());
+
+    }
 }
 
