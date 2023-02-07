@@ -1,2 +1,4 @@
-package site.project.junit.service;public class BookServiceTest {
+package site.project.junit.service;
+
+public class BookServiceTest {
 }

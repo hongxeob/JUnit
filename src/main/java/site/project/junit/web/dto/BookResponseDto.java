@@ -1,2 +1,4 @@
-package site.project.junit.web.dto;public class BookResponseDto {
+package site.project.junit.web.dto;
+
+public class BookResponseDto {
 }

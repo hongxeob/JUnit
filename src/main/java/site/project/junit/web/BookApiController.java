@@ -1,2 +1,4 @@
-package site.project.junit.web;public class BookController {
+package site.project.junit.web;
+
+public class BookApiController {
 }

@@ -1,2 +1,4 @@
-package site.project.junit.domain;public class BookRepositoryTest {
+package site.project.junit.domain;
+
+public class BookRepositoryTest {
 }

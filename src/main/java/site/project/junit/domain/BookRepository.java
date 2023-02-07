@@ -1,2 +1,4 @@
-package site.project.junit.domain;public class BookRepository {
+package site.project.junit.domain;
+
+public interface BookRepository {
 }
