@@ -1,10 +1,11 @@
 package site.project.junit.web.dto;
 
+import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Controller;
 import site.project.junit.domain.Book;
 
 @Setter
+@Getter
 public class BookSaveRequestDto {
     private String title;
     private String author;
