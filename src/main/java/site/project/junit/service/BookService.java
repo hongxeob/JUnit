@@ -6,8 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import site.project.junit.domain.Book;
 import site.project.junit.domain.BookRepository;
 import site.project.junit.util.MailSender;
-import site.project.junit.web.dto.BookResponseDto;
-import site.project.junit.web.dto.BookSaveRequestDto;
+import site.project.junit.web.dto.response.BookListResponseDto;
+import site.project.junit.web.dto.response.BookResponseDto;
+import site.project.junit.web.dto.request.BookSaveRequestDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +33,15 @@ public class BookService {
     }
 
     //목록
-    public List<BookResponseDto> bookList() {
-        return bookRepository.findAll()
+    public BookListResponseDto bookList() {
+        List<BookResponseDto> bookResponseDtoList = bookRepository.findAll()
                 .stream()
                 .map(Book::toDto)
                 .collect(Collectors.toList());
+        BookListResponseDto bookListResponseDto = BookListResponseDto.builder()
+                .bookResponseDtoList(bookResponseDtoList)
+                .build();
+        return bookListResponseDto;
     }
 
     //한건
@@ -64,7 +69,8 @@ public class BookService {
         if (findBook.isPresent()) {
             Book book = findBook.get();
             book.updateBook(bookSaveRequestDto.getTitle(), bookSaveRequestDto.getAuthor());
-            return book.toDto();
+            BookResponseDto bookResponseDto = book.toDto();
+            return bookResponseDto;
         } else {
             throw new RuntimeException("해당 ID의 책을 찾을 수 없습니다");
         }

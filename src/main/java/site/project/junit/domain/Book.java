@@ -3,7 +3,7 @@ package site.project.junit.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.project.junit.web.dto.BookResponseDto;
+import site.project.junit.web.dto.response.BookResponseDto;
 
 import javax.persistence.*;
 

@@ -8,8 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import site.project.junit.domain.Book;
 import site.project.junit.domain.BookRepository;
 import site.project.junit.util.MailSender;
-import site.project.junit.web.dto.BookResponseDto;
-import site.project.junit.web.dto.BookSaveRequestDto;
+import site.project.junit.web.dto.request.BookSaveRequestDto;
+import site.project.junit.web.dto.response.BookListResponseDto;
+import site.project.junit.web.dto.response.BookResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,18 +47,17 @@ public class BookServiceTest {
     @Test
     void 목록() throws Exception {
         //given
-        //when
         List<Book> list = new ArrayList<>();
         list.add(new Book(1L, "책이름1", "책저자1"));
         list.add(new Book(2L, "책이름2", "책저자2"));
-
+        //stub
         when(bookRepository.findAll()).thenReturn(list);
-        List<BookResponseDto> bookResponseDtos = bookService.bookList();
-        bookResponseDtos.stream().forEach(bookResponseDto -> {
-        });
+        //when
+        BookListResponseDto bookListResponseDto = bookService.bookList();
+
         //then
-        assertThat(bookResponseDtos.get(0).getTitle()).isEqualTo("책이름1");
-        assertThat(bookResponseDtos.get(1).getTitle()).isEqualTo("책이름2");
+        assertThat(bookListResponseDto.getItems().get(0).getTitle()).isEqualTo("책이름1");
+        assertThat(bookListResponseDto.getItems().get(1).getTitle()).isEqualTo("책이름2");
     }
 
     @Test
