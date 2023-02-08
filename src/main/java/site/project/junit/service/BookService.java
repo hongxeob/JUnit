@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.project.junit.domain.Book;
 import site.project.junit.domain.BookRepository;
+import site.project.junit.util.MailSender;
 import site.project.junit.web.dto.BookResponseDto;
 import site.project.junit.web.dto.BookSaveRequestDto;
 
@@ -16,21 +17,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
+    private final MailSender mailSender;
 
     //등록
     @Transactional(rollbackFor = RuntimeException.class)
     public BookResponseDto createBook(BookSaveRequestDto requestDto) {
         Book savedBook = bookRepository.save(requestDto.toEntity());
-        return new BookResponseDto().toDto(savedBook);
-
-
+        if (savedBook != null) {
+            if (!mailSender.send()) {
+                throw new RuntimeException("메일 전송이 되지 않았습니다");
+            }
+        }
+        return savedBook.toDto();
     }
 
     //목록
     public List<BookResponseDto> bookList() {
         return bookRepository.findAll()
                 .stream()
-                .map(new BookResponseDto()::toDto)
+                .map(Book::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +43,9 @@ public class BookService {
     public BookResponseDto findOne(Long id) {
         Optional<Book> findBook = bookRepository.findById(id);
         if (findBook.isPresent()) {
-            return new BookResponseDto().toDto(findBook.get());
+            Book book = findBook.get();
+            BookResponseDto bookResponseDto = book.toDto();
+            return bookResponseDto;
         } else {
             throw new RuntimeException("해당 ID는 존재하지 않습니다");
         }

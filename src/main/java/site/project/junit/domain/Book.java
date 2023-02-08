@@ -3,6 +3,7 @@ package site.project.junit.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.project.junit.web.dto.BookResponseDto;
 
 import javax.persistence.*;
 
@@ -27,5 +28,13 @@ public class Book {
     public void updateBook(String title, String author) {
         this.title = title;
         this.author = author;
+    }
+
+    public BookResponseDto toDto() {
+        return BookResponseDto.builder()
+                .id(id)
+                .title(title)
+                .author(author)
+                .build();
     }
 }
