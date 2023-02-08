@@ -13,6 +13,7 @@ import site.project.junit.web.dto.BookSaveRequestDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +46,6 @@ public class BookServiceTest {
     @Test
     void 목록() throws Exception {
         //given
-
         //when
         List<Book> list = new ArrayList<>();
         list.add(new Book(1L, "책이름1", "책저자1"));
@@ -54,14 +54,42 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(list);
         List<BookResponseDto> bookResponseDtos = bookService.bookList();
         bookResponseDtos.stream().forEach(bookResponseDto -> {
-            System.out.println(bookResponseDto.getId());
-            System.out.println(bookResponseDto.getTitle());
-
         });
-
         //then
         assertThat(bookResponseDtos.get(0).getTitle()).isEqualTo("책이름1");
         assertThat(bookResponseDtos.get(1).getTitle()).isEqualTo("책이름2");
+    }
+
+    @Test
+    void 한건찾기() throws Exception {
+        //given
+
+        //stub
+        Book newBook = new Book(1L, "책제목", "책저자");
+        Optional<Book> book = Optional.of(newBook);
+        when(bookRepository.findById(newBook.getId())).thenReturn(book);
+        //when
+        BookResponseDto bookResponseDto = bookService.findOne(newBook.getId());
+        //then
+        assertThat(bookResponseDto.getTitle()).isEqualTo(newBook.getTitle());
+    }
+
+    @Test
+    void 수정() throws Exception {
+        //given
+        Long id = 1L;
+        BookSaveRequestDto requestDto = new BookSaveRequestDto();
+        requestDto.setTitle("책제목바꿈");
+        requestDto.setAuthor("책내용바꿈");
+        //stub
+        Book newBook = new Book(1L, "책제목", "책저자");
+        Optional<Book> book = Optional.of(newBook);
+        when(bookRepository.findById(newBook.getId())).thenReturn(book);
+        //when
+        BookResponseDto bookResponseDto = bookService.updateBook(1L, requestDto);
+        //then
+        assertThat(bookResponseDto.getTitle()).isEqualTo(requestDto.getTitle());
+        assertThat(bookResponseDto.getAuthor()).isEqualTo(requestDto.getAuthor());
 
     }
 }

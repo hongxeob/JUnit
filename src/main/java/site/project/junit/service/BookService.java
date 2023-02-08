@@ -59,11 +59,12 @@ public class BookService {
 
     //수정
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateBook(Long id, BookSaveRequestDto bookSaveRequestDto) {
+    public BookResponseDto updateBook(Long id, BookSaveRequestDto bookSaveRequestDto) {
         Optional<Book> findBook = bookRepository.findById(id);
         if (findBook.isPresent()) {
             Book book = findBook.get();
             book.updateBook(bookSaveRequestDto.getTitle(), bookSaveRequestDto.getAuthor());
+            return book.toDto();
         } else {
             throw new RuntimeException("해당 ID의 책을 찾을 수 없습니다");
         }
