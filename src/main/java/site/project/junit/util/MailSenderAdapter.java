@@ -2,17 +2,16 @@ package site.project.junit.util;
 
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public class MailSenderAdapter implements MailSender {
-//    private Mail mail;
+    private Mail mail;
 
-//    public MailSenderAdapter() {
-//        this.mail = new Mail();
-//    }
+    public MailSenderAdapter() {
+        this.mail = new Mail();
+    }
 
     @Override
     public boolean send() {
-//        return mail.sendMail();
-        return true;
+        return mail.sendMail();
     }
 }
