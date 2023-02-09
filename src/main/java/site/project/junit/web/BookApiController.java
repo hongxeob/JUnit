@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.project.junit.service.BookService;
 import site.project.junit.web.dto.request.BookSaveRequestDto;
 import site.project.junit.web.dto.response.BookListResponseDto;
@@ -45,21 +42,35 @@ public class BookApiController {
     @GetMapping("/api/v1/books")
     public ResponseEntity<?> getBookList() {
         BookListResponseDto bookListResponseDto = bookService.bookList();
-        return new ResponseEntity<>(CMResponseDto.builder().code(1).msg("전체 조회 성공").body(bookListResponseDto).build(), HttpStatus.CREATED);
+        return new ResponseEntity<>(CMResponseDto.builder().code(1).msg("전체 조회 성공").body(bookListResponseDto).build(), HttpStatus.OK);
     }
 
     //한건찾기
-    public ResponseEntity<?> findBookOne() {
-        return null;
+    @GetMapping("/api/v1/book/{id}")
+    public ResponseEntity<?> findBookOne(@PathVariable Long id) {
+        BookResponseDto bookResponseDto = bookService.findOne(id);
+        return new ResponseEntity<>(CMResponseDto.builder().code(1).msg("원하는 책 한권 조회 성공").body(bookResponseDto).build(),HttpStatus.OK);
+    }
+
+
+    //삭제
+    @DeleteMapping("/api/v1/book/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return new ResponseEntity<>(CMResponseDto.builder().code(1).msg("책 삭제 성공").body(null).build(),HttpStatus.OK);
     }
 
     //수정
-    public ResponseEntity<?> updateBook() {
-        return null;
-    }
-
-    //삭제
-    public ResponseEntity<?> deleteBook() {
-        return null;
+    @PutMapping("/api/v1/book/{id}")
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody @Valid BookSaveRequestDto bookSaveRequestDto,BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            throw new RuntimeException(errorMap.toString());
+        }
+        BookResponseDto bookResponseDto = bookService.updateBook(id, bookSaveRequestDto);
+        return new ResponseEntity<>(CMResponseDto.builder().code(1).msg("책 수정 성공").body(bookResponseDto).build(),HttpStatus.OK);
     }
 }
